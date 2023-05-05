@@ -31,6 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -46,6 +49,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.42"
     kapt "com.google.dagger:hilt-android-compiler:2.42"
     implementation project(":domain")
+    implementation project(":data")
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.18.6'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.6'
