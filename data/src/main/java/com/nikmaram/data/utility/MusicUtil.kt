@@ -37,7 +37,7 @@ object MusicUtil {
                 val dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
 
                 while (cursor.moveToNext()) {
-                    val id = cursor.getInt(idColumn)
+                    val id = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
                     val artist = cursor.getString(artistColumn)
                     val duration = cursor.getLong(durationColumn)
@@ -55,7 +55,7 @@ object MusicUtil {
         }
     }
 
-    fun getMusicById(id: Int, context: Context): ResultData<MusicFile> {
+    fun getMusicById(id: Long, context: Context): ResultData<MusicFile> {
         val selectionArgs = arrayOf(id.toString())
         val cursor = context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -73,7 +73,7 @@ object MusicUtil {
                 val albumColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
                 val dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
                 if (cursor.moveToFirst()) {
-                    val id = cursor.getInt(idColumn)
+                    val id = cursor.getLong(idColumn)
                     val title = cursor.getString(titleColumn)
                     val artist = cursor.getString(artistColumn)
                     val duration = cursor.getLong(durationColumn)

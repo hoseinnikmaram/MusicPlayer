@@ -14,7 +14,7 @@ class MusicDataSourceImp @Inject constructor(private val context:Context) :Music
         return MusicUtil.getAllMusicFiles(context)
     }
 
-    override suspend fun getMusicFileById(id: Int): ResultData<MusicFile> {
+    override suspend fun getMusicFileById(id: Long): ResultData<MusicFile> {
         return MusicUtil.getMusicById(id, context)
     }
 }
