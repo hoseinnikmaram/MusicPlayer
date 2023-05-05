@@ -1,9 +1,10 @@
 <!-- fragment_detail_music.xml -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="viewModel"
-            type="DetailMusicViewModel" />
+            name="model"
+            type="com.nikmaram.data.model.MusicFile" />
     </data>
 
     <LinearLayout
@@ -12,24 +13,24 @@
         android:orientation="vertical">
 
 
-<!--    <ImageView
+    <ImageView
         android:id="@+id/musicImageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_music_placeholder" />-->
+        app:imageUrl="@{model.imageUri}" />
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@{viewModel.musicFile.title}" />
+        android:text="@{model.title}" />
 
     <TextView
         android:id="@+id/artistTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@{viewModel.musicFile.artist}" />
+        android:text="@{model.artist}" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -43,20 +44,20 @@
 
         <ImageView
             android:id="@+id/playButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/ic_play" />
 
         <ImageView
             android:id="@+id/pauseButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/ic_pause" />
 
         <ImageView
             android:id="@+id/stopButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/ic_stop" />
 
     </LinearLayout>
