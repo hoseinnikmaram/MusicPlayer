@@ -1,7 +1,7 @@
 package com.nikmaram.data.model
 
 data class MusicFile(
-    val id: Long,
+    val id: Int,
     val title: String,
     val artist: String,
     val album: String,
