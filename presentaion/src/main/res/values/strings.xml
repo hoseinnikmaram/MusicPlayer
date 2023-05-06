@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">presentaion</string>
+    <string name="Permission_denied_to_read_external_storage">Permission denied to read external storage</string>
+    <string name="dialog_title">Permission required</string>
+    <string name="dialog_message">This permission is required to read music files.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

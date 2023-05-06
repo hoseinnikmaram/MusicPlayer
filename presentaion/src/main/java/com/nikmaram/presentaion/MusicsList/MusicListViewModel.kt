@@ -19,11 +19,7 @@ class MusicListViewModel @Inject constructor(
     private val _musicListState = MutableLiveData<MusicListState>()
     val musicListState: LiveData<MusicListState> = _musicListState
 
-    init {
-        loadMusicList()
-    }
-
-    private fun loadMusicList() = viewModelScope.launch {
+    fun loadMusicList() = viewModelScope.launch {
         _musicListState.value = MusicListState.Loading
         val result = getMusicListUseCase()
         _musicListState.value = when (result) {
