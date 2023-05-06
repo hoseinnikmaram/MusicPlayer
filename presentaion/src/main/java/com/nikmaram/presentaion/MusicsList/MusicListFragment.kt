@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import com.nikmaram.presentaion.databinding.FragmentMusicListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,7 +47,8 @@ class MusicListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         musicListAdapter = MusicListAdapter {
-
+            val action = MusicListFragmentDirections.actionMusicListFragmentToMusicDetailFragment(it.id)
+            findNavController().navigate(action)
         }
         binding.recyclerView.apply {
             adapter = musicListAdapter

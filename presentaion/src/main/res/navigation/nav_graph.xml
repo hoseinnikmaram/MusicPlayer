@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/musicListFragment">
+
+    <fragment
+        android:id="@+id/musicListFragment"
+        android:name="com.nikmaram.presentaion.MusicsList.MusicListFragment"
+        android:label="MusicListFragment" >
+        <action
+            android:id="@+id/action_musicListFragment_to_musicDetailFragment"
+            app:destination="@id/musicDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/musicDetailFragment"
+        android:name="com.nikmaram.presentaion.musicDetail.MusicDetailFragment"
+        android:label="MusicDetailFragment" >
+        <argument
+            android:name="musicId"
+            app:argType="long" />
+    </fragment>
+</navigation>
