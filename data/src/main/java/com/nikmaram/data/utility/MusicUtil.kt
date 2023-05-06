@@ -1,7 +1,12 @@
 package com.nikmaram.data.utility
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import com.nikmaram.data.model.MusicFile
 
 object MusicUtil {
@@ -43,7 +48,8 @@ object MusicUtil {
                     val duration = cursor.getLong(durationColumn)
                     val album = cursor.getString(albumColumn)
                     val data = cursor.getString(dataColumn)
-                    musicFiles.add(MusicFile(id, title, artist, album, duration, data))
+                    val image = getMusicImage(data)
+                    musicFiles.add(MusicFile(id, title, artist, album, duration, data,image))
                 }
             }
             return ResultData.Success(musicFiles)
@@ -79,7 +85,8 @@ object MusicUtil {
                     val duration = cursor.getLong(durationColumn)
                     val album = cursor.getString(albumColumn)
                     val data = cursor.getString(dataColumn)
-                    return ResultData.Success(MusicFile(id, title, artist, album, duration, data))
+                    val image = getMusicImage(data)
+                    return ResultData.Success(MusicFile(id, title, artist, album, duration, data,image))
                 }
             }
         }
@@ -90,6 +97,16 @@ object MusicUtil {
             cursor?.close()
         }
         return ResultData.Success(null)
+    }
+    private fun getMusicImage(filePath: String): Bitmap? {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(filePath)
+        val artworkBytes = retriever.embeddedPicture
+        return if (artworkBytes != null) {
+            BitmapFactory.decodeByteArray(artworkBytes, 0, artworkBytes.size)
+        } else {
+            null
+        }
     }
 }
 

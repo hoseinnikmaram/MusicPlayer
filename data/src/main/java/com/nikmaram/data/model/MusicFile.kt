@@ -1,5 +1,6 @@
 package com.nikmaram.data.model
 
+import android.graphics.Bitmap
 import android.net.Uri
 
 data class MusicFile(
@@ -9,5 +10,5 @@ data class MusicFile(
     val album: String?,
     val duration: Long,
     val filePath: String,
-    val imageUri: Uri? = null
+    val imageUri: Bitmap? = null
 )
