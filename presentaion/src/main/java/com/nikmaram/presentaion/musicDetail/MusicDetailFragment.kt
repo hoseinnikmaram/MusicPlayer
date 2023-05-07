@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.nikmaram.presentaion.databinding.FragmentDetailMusicBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MusicDetailFragment : Fragment() {
 
     private var binding: FragmentDetailMusicBinding? = null
