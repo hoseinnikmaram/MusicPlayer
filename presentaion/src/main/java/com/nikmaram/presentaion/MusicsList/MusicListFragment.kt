@@ -82,9 +82,9 @@ class MusicListFragment : Fragment() {
                 ).show()
                 requestReadExternalStoragePermission()
             }
-            // Request read external storage permission if not granted yet
-            requestReadExternalStoragePermission()
         }
+        // Request read external storage permission if not granted yet
+        requestReadExternalStoragePermission()
     }
          private fun requestReadExternalStoragePermission() {
             when {
