@@ -20,14 +20,16 @@ class MusicListViewModel @Inject constructor(
     val musicListState: LiveData<MusicListState> = _musicListState
 
     fun loadMusicList() = viewModelScope.launch {
-        _musicListState.value = MusicListState.Loading
+        _musicListState.postValue(MusicListState.Loading)
         val result = getMusicListUseCase()
-        _musicListState.value = when (result) {
-            is ResultData.Success -> {
-                MusicListState.Loaded(result.data as List<MusicFile>)
+        _musicListState.postValue(
+            when (result) {
+                is ResultData.Success -> {
+                    MusicListState.Loaded(result.data as List<MusicFile>)
+                }
+                is ResultData.Error -> MusicListState.Error(result.exception.message)
             }
-            is ResultData.Error -> MusicListState.Error(result.exception.message)
-        }
+        )
     }
 
     sealed class MusicListState {
