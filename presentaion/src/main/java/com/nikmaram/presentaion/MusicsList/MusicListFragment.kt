@@ -33,15 +33,12 @@ class MusicListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        if(::binding.isInitialized) return binding.root
         binding = FragmentMusicListBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         checkPermission()
         setupRecyclerView()
         observeViewModel()
+        return binding.root
     }
 
     private fun observeViewModel() {
