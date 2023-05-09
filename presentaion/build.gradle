@@ -39,7 +39,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     testImplementation 'junit:junit:4.13.2'
@@ -52,8 +52,12 @@ dependencies {
     implementation project(":domain")
     implementation project(":data")
     // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.6'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.18.6'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.6'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.18.6'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.6' // For DASH support
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.18.6' // For HLS support
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.6' // For SmoothStreaming support
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     // navigation
@@ -68,4 +72,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation 'androidx.media:media:1.6.0'
+
 }
