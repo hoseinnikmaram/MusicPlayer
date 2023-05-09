@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="notification_height">64dp</dimen>
+    <dimen name="notification_image_size">45dp</dimen>
+    <dimen name="notification_margin">8dp</dimen>
+    <dimen name="notification_title_text_size">18sp</dimen>
+    <dimen name="notification_artist_text_size">15sp</dimen>
+    <dimen name="notification_control_size">25dp</dimen>
+</resources>

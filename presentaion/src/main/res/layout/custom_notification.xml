@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/notification_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/ivAlbumArt"
+        android:layout_width="@dimen/notification_image_size"
+        android:layout_height="@dimen/notification_image_size"
+        android:layout_margin="@dimen/notification_margin"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/ivAlbumArt"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/notification_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/notification_title_text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvArtist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/notification_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/notification_artist_text_size" />
+
+        <ProgressBar
+            android:id="@+id/progress_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/notification_margin"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@android:drawable/progress_horizontal"
+            android:thumb="@android:drawable/seek_thumb" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnPrev"
+            android:layout_width="@dimen/notification_control_size"
+            android:layout_height="@dimen/notification_control_size"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:tint="@color/black"
+            android:src="@drawable/ic_skip_to_previous" />
+
+        <ImageButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="@dimen/notification_control_size"
+            android:layout_height="@dimen/notification_control_size"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:tint="@color/black"
+            android:src="@drawable/ic_play" />
+
+        <ImageButton
+            android:id="@+id/btnNext"
+            android:layout_width="@dimen/notification_control_size"
+            android:layout_height="@dimen/notification_control_size"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:tint="@color/black"
+            android:src="@drawable/ic_skip_to_next" />
+
+    </LinearLayout>
+
+</RelativeLayout>
