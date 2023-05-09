@@ -1,29 +1,24 @@
 package com.nikmaram.presentaion.utility
 
-import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.RemoteViews
-import android.widget.SeekBar
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
-import androidx.media.session.MediaButtonReceiver
 import androidx.navigation.NavDeepLinkBuilder
 import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.R
 import com.nikmaram.presentaion.model.PlaybackAction
 import com.nikmaram.service.MusicPlayerService
+
 object NotificationUtils {
      fun createNotification(context: Context, musicFile: MusicFile, playbackState: Int, progress: Int, duration: Int): Notification {
         val mediaSessionCompat = MediaSessionCompat(context, "MusicPlayerService")
