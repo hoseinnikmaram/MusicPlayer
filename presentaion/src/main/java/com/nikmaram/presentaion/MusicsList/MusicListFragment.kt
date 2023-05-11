@@ -42,12 +42,13 @@ class MusicListFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.musicListState.observe(viewLifecycleOwner){musicListState ->
             when(musicListState){
-                is MusicListViewModel.MusicListState.Error -> TODO()
+                is MusicListViewModel.MusicListState.Error -> {binding.progress.visibility = View.GONE}
                 is MusicListViewModel.MusicListState.Loaded -> {
+                    binding.progress.visibility = View.GONE
                     musics.addAll(musicListState.musicList)
                     musicListAdapter.submitList(musicListState.musicList)
                 }
-                MusicListViewModel.MusicListState.Loading -> TODO()
+                MusicListViewModel.MusicListState.Loading -> {}
             }
         }
     }
