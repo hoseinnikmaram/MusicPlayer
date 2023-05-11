@@ -2,13 +2,14 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/notification_height"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white">
+    android:background="@android:color/darker_gray">
 
     <ImageView
         android:id="@+id/ivAlbumArt"
         android:layout_width="@dimen/notification_image_size"
         android:layout_height="@dimen/notification_image_size"
         android:layout_margin="@dimen/notification_margin"
+        android:src="@drawable/ic_round_audio_file_24"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -62,8 +63,7 @@
             android:layout_height="@dimen/notification_control_size"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            app:tint="@color/black"
-            android:src="@drawable/ic_previous_track" />
+            android:src="@drawable/ic_round_skip_previous_48" />
 
         <ImageButton
             android:id="@+id/btnPlayPause"
@@ -71,8 +71,7 @@
             android:layout_height="@dimen/notification_control_size"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            app:tint="@color/black"
-            android:src="@drawable/ic_play" />
+            android:src="@drawable/ic_round_play_arrow_24_small" />
 
         <ImageButton
             android:id="@+id/btnNext"
@@ -80,8 +79,7 @@
             android:layout_height="@dimen/notification_control_size"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            app:tint="@color/black"
-            android:src="@drawable/ic_next_track" />
+            android:src="@drawable/ic_round_skip_next_48" />
 
     </LinearLayout>
 

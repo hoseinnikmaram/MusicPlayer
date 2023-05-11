@@ -12,7 +12,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
 import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.R
@@ -20,13 +19,19 @@ import com.nikmaram.presentaion.model.PlaybackAction
 import com.nikmaram.presentaion.service.MusicPlayerService
 
 object NotificationUtils {
-     fun createNotification(context: Context, musicFile: MusicFile, playbackState: Int, progress: Int, duration: Int): Notification {
-        val mediaSessionCompat = MediaSessionCompat(context, "MusicPlayerService")
+     fun createNotification(
+         mediaSessionCompat: MediaSessionCompat,
+         context: Context,
+         musicFile: MusicFile,
+         playbackState: Int,
+         progress: Int,
+         duration: Int
+     ): Notification {
         // Create a pending intent that will launch the music player when the notification is tapped
         val pendingIntent = NavDeepLinkBuilder(context)
             .setGraph(R.navigation.nav_graph)
             .setDestination(R.id.musicDetailFragment)
-            .setArguments(bundleOf("musicId" to musicFile.id))
+            //.setArguments(bundleOf("musicId" to musicFile.id))
             .createPendingIntent()
 
         // Create a notification with a custom layout
@@ -39,7 +44,7 @@ object NotificationUtils {
                 val bitmap = musicFile.imageUri
                 setImageViewBitmap(
                     R.id.ivAlbumArt,
-                    bitmap ?: BitmapFactory.decodeResource(context.resources, R.drawable.ic_music)
+                    bitmap ?: BitmapFactory.decodeResource(context.resources, R.drawable.ic_round_audiotrack_24)
                 )
 
                 // Set the playback controls' click listeners
@@ -66,11 +71,11 @@ object NotificationUtils {
 
         // Set up the notification's playback controls
         val playPauseIcon =
-            if (playbackState == PlaybackStateCompat.STATE_PLAYING) R.drawable.ic_pause else R.drawable.ic_play
+            if (playbackState == PlaybackStateCompat.STATE_PLAYING) R.drawable.ic_round_pause_24_small else R.drawable.ic_round_play_arrow_24_small
         return NotificationCompat.Builder(context, "music_player_channel")
             .setContentTitle(musicFile.title)
             .setContentText(musicFile.artist)
-            .setSmallIcon(R.drawable.ic_music)
+            .setSmallIcon(R.drawable.ic_round_audiotrack_24)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(pendingIntent)
