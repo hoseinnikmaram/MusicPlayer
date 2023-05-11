@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.databinding.ListItemMusicBinding
 
-class MusicListAdapter(private val onMusicFileClicked: (MusicFile) -> Unit) :
+class MusicListAdapter(private val onMusicFileClicked: (Int) -> Unit) :
     ListAdapter<MusicFile, MusicViewHolder>(MusicFileDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicViewHolder {
@@ -20,7 +20,7 @@ class MusicListAdapter(private val onMusicFileClicked: (MusicFile) -> Unit) :
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
         val musicFile = getItem(position)
         holder.bind(musicFile)
-        holder.itemView.setOnClickListener { onMusicFileClicked(musicFile) }
+        holder.itemView.setOnClickListener { onMusicFileClicked(position) }
     }
 }
 
