@@ -1,10 +1,9 @@
 package com.nikmaram.presentaion.service
+
 import android.Manifest
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
@@ -14,23 +13,24 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.*
 import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.MEDIA_SESSION_TAG
 import com.nikmaram.presentaion.NOTIFICATION_ID
+import com.nikmaram.presentaion.model.PlaybackAction
 import com.nikmaram.presentaion.model.ServiceContentWrapper
 import com.nikmaram.presentaion.utility.NotificationUtils
 import com.nikmaram.presentaion.utility.NotificationUtils.createNotification
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class MusicPlayerService @Inject constructor() : LifecycleService() {
+
+class MusicPlayerService : LifecycleService() {
     private lateinit var notificationManager: NotificationManagerCompat
     private lateinit var mediaSessionCompat: MediaSessionCompat
-    private var musicFiles: List<MusicFile> = emptyList()
-    private val lifecycleRegistry = LifecycleRegistry(this)
+
     companion object {
 
         private var isRunningService = MutableLiveData(false)
@@ -86,22 +86,25 @@ class MusicPlayerService @Inject constructor() : LifecycleService() {
         fun onPlay() {
             exoPlayer.play()
         }
+
         fun onPause() {
             exoPlayer.pause()
         }
-        fun togglePlayback(): Boolean {
-            isPlayingLiveData.value = if (isPlayingLiveData.value == true) {
+
+        fun togglePlayback() {
+            if (isPlayingLiveData.value == true)
                 onPause()
-                false
-            } else {
+            else
                 onPlay()
-                true
-            }
-            return isPlayingLiveData.value!!
         }
 
-        fun onNext() { if (exoPlayer.hasNextMediaItem()) exoPlayer.seekToNextMediaItem() }
-        fun onPrevious() { if (exoPlayer.hasPreviousMediaItem()) exoPlayer.seekToPreviousMediaItem() }
+        fun onNext() {
+            if (exoPlayer.hasNextMediaItem()) exoPlayer.seekToNextMediaItem()
+        }
+
+        fun onPrevious() {
+            if (exoPlayer.hasPreviousMediaItem()) exoPlayer.seekToPreviousMediaItem()
+        }
 
         fun onSeekTo(pos: Long) {
             exoPlayer.seekTo(pos)
@@ -111,33 +114,40 @@ class MusicPlayerService @Inject constructor() : LifecycleService() {
         private var timer: CountDownTimer? = null
         private const val TIMER_INTERVAL: Long = 250
     }
+
     override fun onCreate() {
         super.onCreate()
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         mediaSessionCompat = MediaSessionCompat(this, MEDIA_SESSION_TAG)
         mediaSessionCompat.isActive = true
         exoPlayer = ExoPlayer.Builder(this).build()
         exoPlayer.addListener(getPlayerListener())
         isPlayingLiveData.value = false
         NotificationUtils.createChannel(this)
+        notificationManager = NotificationManagerCompat.from(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        when (intent?.action) {
+            PlaybackAction.PLAY_PAUSE.name -> togglePlayback()
+            PlaybackAction.PREV.name -> onPrevious()
+            PlaybackAction.NEXT.name -> onNext()
+        }
         isRunningService.value = true
 
         serviceContentLiveData.observe(this) {
             exoPlayer.clearMediaItems()
             if (!it.playlist.isNullOrEmpty())
-            for (musicFile in it.playlist!!)
-                exoPlayer.addMediaItem(MediaItem.fromUri(musicFile.filePath))
+                for (musicFile in it.playlist!!)
+                    exoPlayer.addMediaItem(MediaItem.fromUri(musicFile.filePath))
             exoPlayer.seekToDefaultPosition(it.position)
             exoPlayer.prepare()
             exoPlayer.playWhenReady = true
             isRunningService.value = true
-            val notification = getCurrentMusicFile()?.let { music ->
+            val currentMusic = it.playlist?.get(it.position)
+            val notification = currentMusic?.let { music ->
                 createNotification(
+                    mediaSessionCompat,
                     this,
                     music,
                     PlaybackStateCompat.STATE_PLAYING,
@@ -150,33 +160,33 @@ class MusicPlayerService @Inject constructor() : LifecycleService() {
         return START_STICKY
     }
 
-    public fun updateNotification(playbackState: Int, progress: Int) {
-            val musicFile = getCurrentMusicFile() ?: return
+    fun updateNotification(playbackState: Int, progress: Int) {
+        val musicFile = getCurrentMusicFile() ?: return
         val notification =
-                    createNotification(this,
-                        musicFile,
-                        playbackState,
-                        progress,
-                        exoPlayer.duration.toInt())
-                    if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.POST_NOTIFICATIONS
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) return
+            createNotification(
+                mediaSessionCompat,
+                this,
+                musicFile,
+                playbackState,
+                progress,
+                exoPlayer.duration.toInt()
+            )
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return
 
-            notificationManager.notify(NOTIFICATION_ID, notification)
+        notificationManager.notify(NOTIFICATION_ID, notification)
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         exoPlayer.release()
         isRunningService.value = false
     }
 
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
-    }
 
     override fun onBind(intent: Intent): IBinder? {
         super.onBind(intent)
@@ -189,13 +199,16 @@ class MusicPlayerService @Inject constructor() : LifecycleService() {
         stopSelf()
     }
 
-    private fun getPlayerListener() : Player.Listener = object : Player.Listener {
+    private fun getPlayerListener(): Player.Listener = object : Player.Listener {
 
         override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
             mediaMetadataLiveData.value = mediaMetadata
             contentPositionLiveData.value = exoPlayer.currentMediaItemIndex
             trackDurationLiveData.value = 0
-            Log.d("DEBUG", "IS PLAYABLE: ${mediaMetadata}\tIndex: ${exoPlayer.currentMediaItemIndex}")
+            Log.d(
+                "DEBUG",
+                "IS PLAYABLE: ${mediaMetadata}\tIndex: ${exoPlayer.currentMediaItemIndex}"
+            )
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -218,11 +231,16 @@ class MusicPlayerService @Inject constructor() : LifecycleService() {
 
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
-            Toast.makeText(this@MusicPlayerService, "Error: ${error.errorCodeName}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MusicPlayerService,
+                "Error: ${error.errorCodeName}",
+                Toast.LENGTH_SHORT
+            ).show()
             stopSelf()
         }
 
     }
+
     private fun startTimer(duration: Long) {
 
         val startFrom = trackDurationLiveData.value ?: 0
@@ -235,10 +253,15 @@ class MusicPlayerService @Inject constructor() : LifecycleService() {
         timer = object : CountDownTimer(timerDuration, TIMER_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
                 trackDurationLiveData.value = trackDurationLiveData.value?.plus(TIMER_INTERVAL)
+                updateNotification(
+                    PlaybackStateCompat.STATE_PLAYING,
+                    trackDurationLiveData.value?.toInt() ?: 0
+                )
             }
 
             override fun onFinish() {
                 trackDurationLiveData.value = trackDurationLiveData.value?.plus(TIMER_INTERVAL)
+                updateNotification(PlaybackStateCompat.STATE_PLAYING, 0)
             }
         }.start()
     }

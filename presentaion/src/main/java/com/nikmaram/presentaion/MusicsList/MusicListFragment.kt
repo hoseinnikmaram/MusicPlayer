@@ -1,8 +1,5 @@
 package com.nikmaram.presentaion.MusicsList
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.database.Observable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +8,15 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
+import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.R
-import com.nikmaram.presentaion.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE
 import com.nikmaram.presentaion.databinding.FragmentMusicListBinding
+import com.nikmaram.presentaion.model.ServiceContentWrapper
 import com.nikmaram.presentaion.readExternalStoragePermission
+import com.nikmaram.presentaion.service.MusicPlayerService
 import com.nikmaram.presentaion.utility.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +26,7 @@ class MusicListFragment : Fragment() {
     private lateinit var binding: FragmentMusicListBinding
     private lateinit var musicListAdapter:MusicListAdapter
     private lateinit var requestPermissionResultLauncher:ActivityResultLauncher<String>
+    private var musics = ArrayList<MusicFile>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +44,7 @@ class MusicListFragment : Fragment() {
             when(musicListState){
                 is MusicListViewModel.MusicListState.Error -> TODO()
                 is MusicListViewModel.MusicListState.Loaded -> {
+                    musics.addAll(musicListState.musicList)
                     musicListAdapter.submitList(musicListState.musicList)
                 }
                 MusicListViewModel.MusicListState.Loading -> TODO()
@@ -55,13 +54,25 @@ class MusicListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         musicListAdapter = MusicListAdapter {
-            val action = MusicListFragmentDirections.actionMusicListFragmentToMusicDetailFragment(it.id)
+            startPlayer(position = it)
+            val action = MusicListFragmentDirections.actionMusicListFragmentToMusicDetailFragment()
             findNavController().navigate(action)
         }
         binding.recyclerView.apply {
             adapter = musicListAdapter
             setHasFixedSize(true)
         }
+    }
+    private fun startPlayer(position: Int) {
+        if (musics.size == 0) {
+            Toast.makeText(requireContext(), "Nothing to play", Toast.LENGTH_SHORT).show()
+            return
+        }
+        MusicPlayerService.startService(requireContext(), ServiceContentWrapper(
+            position = position,
+            playlist = musics,
+        )
+        )
     }
     private fun checkPermission() {
         requestPermissionResultLauncher = registerForActivityResult(

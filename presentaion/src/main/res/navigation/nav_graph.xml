@@ -16,8 +16,5 @@
         android:id="@+id/musicDetailFragment"
         android:name="com.nikmaram.presentaion.musicDetail.MusicDetailFragment"
         android:label="MusicDetailFragment" >
-        <argument
-            android:name="musicFile"
-            app:argType="com.nikmaram.data.model.MusicFile" />
     </fragment>
 </navigation>

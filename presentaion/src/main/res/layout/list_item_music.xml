@@ -24,7 +24,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/ic_music"
+                tools:src="@drawable/ic_round_audio_file_24"
                 app:imageUrl="@{music.imageUri}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
