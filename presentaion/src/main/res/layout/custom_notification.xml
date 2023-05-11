@@ -12,7 +12,7 @@
         android:scaleType="centerCrop" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/ivAlbumArt"
         android:orientation="vertical">
@@ -31,6 +31,7 @@
             android:id="@+id/tvArtist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/notification_margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@android:color/darker_gray"
@@ -44,13 +45,14 @@
             android:max="100"
             android:progress="0"
             android:progressDrawable="@android:drawable/progress_horizontal"
-            android:thumb="@android:drawable/seek_thumb" />
+             />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
         android:layout_alignParentRight="true"
         android:orientation="horizontal">
 
@@ -61,7 +63,7 @@
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:tint="@color/black"
-            android:src="@drawable/ic_skip_to_previous" />
+            android:src="@drawable/ic_previous_track" />
 
         <ImageButton
             android:id="@+id/btnPlayPause"
@@ -79,7 +81,7 @@
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
             app:tint="@color/black"
-            android:src="@drawable/ic_skip_to_next" />
+            android:src="@drawable/ic_next_track" />
 
     </LinearLayout>
 

@@ -17,7 +17,7 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.R
 import com.nikmaram.presentaion.model.PlaybackAction
-import com.nikmaram.service.MusicPlayerService
+import com.nikmaram.presentaion.service.MusicPlayerService
 
 object NotificationUtils {
      fun createNotification(context: Context, musicFile: MusicFile, playbackState: Int, progress: Int, duration: Int): Notification {
