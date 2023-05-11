@@ -12,55 +12,72 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-    <ImageView
-        android:id="@+id/musicImageView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        app:imageUrl="@{model.imageUri}" />
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@{model.title}" />
-
-    <TextView
-        android:id="@+id/artistTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@{model.artist}" />
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
         <ImageView
-            android:id="@+id/playButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_play" />
+            android:id="@+id/album_art"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_weight="2"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:imageUrl="@{model.imageUri}"
+            android:src="@drawable/placeholder" />
 
-        <ImageView
-            android:id="@+id/pauseButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_pause" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{model.title}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:padding="@dimen/padding_small" />
 
-        <ImageView
-            android:id="@+id/stopButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_stop" />
+        <TextView
+            android:id="@+id/artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{model.artist}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:padding="@dimen/padding_small" />
+
+        <SeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/prev_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_previous_track" />
+
+            <ImageButton
+                android:id="@+id/play_pause_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_play" />
+
+            <ImageButton
+                android:id="@+id/next_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_next_track" />
+
+        </LinearLayout>
 
     </LinearLayout>
+</layout>
 
-</LinearLayout>
-    </layout>
+
