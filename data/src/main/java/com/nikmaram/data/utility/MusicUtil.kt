@@ -48,8 +48,7 @@ object MusicUtil {
                     val duration = cursor.getLong(durationColumn)
                     val album = cursor.getString(albumColumn)
                     val data = cursor.getString(dataColumn)
-                    val image = getMusicImage(data)
-                    musicFiles.add(MusicFile(id, title, artist, album, duration, data,image))
+                    musicFiles.add(MusicFile(id, title, artist, album, duration, data))
                 }
             }
             return ResultData.Success(musicFiles)
@@ -61,7 +60,7 @@ object MusicUtil {
         }
     }
 
-    fun getMusicById(id: Long, context: Context): ResultData<MusicFile> {
+     fun getMusicById(id: Long, context: Context): ResultData<MusicFile> {
         val selectionArgs = arrayOf(id.toString())
         val cursor = context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -85,8 +84,7 @@ object MusicUtil {
                     val duration = cursor.getLong(durationColumn)
                     val album = cursor.getString(albumColumn)
                     val data = cursor.getString(dataColumn)
-                    val image = getMusicImage(data)
-                    return ResultData.Success(MusicFile(id, title, artist, album, duration, data,image))
+                    return ResultData.Success(MusicFile(id, title, artist, album, duration, data))
                 }
             }
         }
@@ -97,16 +95,6 @@ object MusicUtil {
             cursor?.close()
         }
         return ResultData.Success(null)
-    }
-    private fun getMusicImage(filePath: String): Bitmap? {
-        val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(filePath)
-        val artworkBytes = retriever.embeddedPicture
-        return if (artworkBytes != null) {
-            BitmapFactory.decodeByteArray(artworkBytes, 0, artworkBytes.size)
-        } else {
-            null
-        }
     }
 }
 

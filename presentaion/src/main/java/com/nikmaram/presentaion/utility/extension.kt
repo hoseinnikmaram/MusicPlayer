@@ -1,9 +1,13 @@
 package com.nikmaram.presentaion.utility
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.navigation.findNavController
 import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat
@@ -66,4 +70,29 @@ internal fun MaterialToolbar.setOnBackFragmentNavigation() {
     this.setNavigationOnClickListener {
         it.findNavController().popBackStack()
     }
+}
+internal fun getImageOfTrackByPath(path: String): Bitmap? {
+
+    if (path.isEmpty() || path.isBlank())
+        return null
+
+    val mmr = MediaMetadataRetriever()
+    val bytes: ByteArray?
+
+    try {
+        mmr.setDataSource(path)
+        bytes = mmr.embeddedPicture
+    } catch (e: Exception) {
+        Log.d("Error", e.printStackTrace().toString())
+        return null
+    }
+    mmr.release()
+
+    return if (bytes != null)
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+//            .also {
+//            Log.d("DEBUG", "WIDTH: ${it.width}\tHEIGHT: ${it.height}")
+//        }
+    else
+        null
 }

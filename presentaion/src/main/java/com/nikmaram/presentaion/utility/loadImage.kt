@@ -5,6 +5,9 @@ import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.nikmaram.presentaion.R
 
 @BindingAdapter("imageUrl")
 fun loadImage(view: ImageView, data: Any?) {
@@ -28,4 +31,15 @@ fun loadImage(view: ImageView, data: Any?) {
         }
     }
 }
+
+@BindingAdapter("loadImageByPathFile")
+fun loadImageByPathFile(view: ImageView, path: String) {
+    Glide.with(view.context)
+        .load(getImageOfTrackByPath(path))
+        .placeholder(R.drawable.ic_round_audiotrack_24)
+        .error(R.drawable.ic_round_audiotrack_24)
+        .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
+        .into(view)
+}
+
 
