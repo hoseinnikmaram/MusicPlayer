@@ -14,6 +14,7 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
 import com.nikmaram.data.model.MusicFile
+import com.nikmaram.presentaion.CHANNEL_ID
 import com.nikmaram.presentaion.R
 import com.nikmaram.presentaion.model.PlaybackAction
 import com.nikmaram.presentaion.service.MusicPlayerService
@@ -103,7 +104,7 @@ object NotificationUtils {
     fun createChannel(context: Context){
         // Create a notification channel for Android Oreo and higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "music_player_channel"
+            val channelId = CHANNEL_ID
             val channel = NotificationChannel(
                 channelId,
                 "Music Player Channel",

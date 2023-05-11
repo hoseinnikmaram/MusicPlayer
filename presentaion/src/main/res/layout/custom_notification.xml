@@ -41,12 +41,10 @@
         <ProgressBar
             android:id="@+id/progress_horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="4dp"
             android:layout_marginTop="@dimen/notification_margin"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@android:drawable/progress_horizontal"
-             />
+            android:progressDrawable="@drawable/progress_green"            android:max="100"
+            style="?android:attr/progressBarStyleHorizontal"             />
 
     </LinearLayout>
 

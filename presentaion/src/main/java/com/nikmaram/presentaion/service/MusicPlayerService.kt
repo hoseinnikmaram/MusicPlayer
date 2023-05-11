@@ -1,6 +1,7 @@
 package com.nikmaram.presentaion.service
 
 import android.Manifest
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,11 +19,14 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.nikmaram.data.model.MusicFile
+import com.nikmaram.presentaion.CHANNEL_ID
 import com.nikmaram.presentaion.MEDIA_SESSION_TAG
 import com.nikmaram.presentaion.NOTIFICATION_ID
 import com.nikmaram.presentaion.model.PlaybackAction
 import com.nikmaram.presentaion.model.ServiceContentWrapper
+import com.nikmaram.presentaion.utility.DescriptionAdapter
 import com.nikmaram.presentaion.utility.NotificationUtils
 import com.nikmaram.presentaion.utility.NotificationUtils.createNotification
 
@@ -30,6 +34,7 @@ import com.nikmaram.presentaion.utility.NotificationUtils.createNotification
 class MusicPlayerService : LifecycleService() {
     private lateinit var notificationManager: NotificationManagerCompat
     private lateinit var mediaSessionCompat: MediaSessionCompat
+    private lateinit var playerNotificationManager: PlayerNotificationManager
 
     companion object {
 
@@ -136,6 +141,7 @@ class MusicPlayerService : LifecycleService() {
         isRunningService.value = true
 
         serviceContentLiveData.observe(this) {
+            setupPlayerNotificationManager()
             exoPlayer.clearMediaItems()
             if (!it.playlist.isNullOrEmpty())
                 for (musicFile in it.playlist!!)
@@ -144,42 +150,11 @@ class MusicPlayerService : LifecycleService() {
             exoPlayer.prepare()
             exoPlayer.playWhenReady = true
             isRunningService.value = true
-            val currentMusic = it.playlist?.get(it.position)
-            val notification = currentMusic?.let { music ->
-                createNotification(
-                    mediaSessionCompat,
-                    this,
-                    music,
-                    PlaybackStateCompat.STATE_PLAYING,
-                    0,
-                    exoPlayer.duration.toInt()
-                )
-            }
-            startForeground(NOTIFICATION_ID, notification)
         }
         return START_STICKY
     }
 
-    fun updateNotification(playbackState: Int, progress: Int) {
-        val musicFile = getCurrentMusicFile() ?: return
-        val notification =
-            createNotification(
-                mediaSessionCompat,
-                this,
-                musicFile,
-                playbackState,
-                progress,
-                exoPlayer.duration.toInt()
-            )
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) return
 
-        notificationManager.notify(NOTIFICATION_ID, notification)
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -221,13 +196,6 @@ class MusicPlayerService : LifecycleService() {
             }
         }
 
-        override fun onPlaybackStateChanged(state: Int) {
-            if (state == Player.STATE_ENDED) {
-                onNext()
-            } else {
-                updateNotification(state, trackDurationLiveData.value?.toInt() ?: 0)
-            }
-        }
 
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
@@ -240,6 +208,32 @@ class MusicPlayerService : LifecycleService() {
         }
 
     }
+    private fun setupPlayerNotificationManager() {
+        playerNotificationManager = PlayerNotificationManager
+            .Builder(this, NOTIFICATION_ID, CHANNEL_ID)
+            .setMediaDescriptionAdapter(DescriptionAdapter(context = this))
+            .setNotificationListener(getNotificationListener()).build()
+        playerNotificationManager.setPlayer(exoPlayer)
+    }
+    private fun getNotificationListener(): PlayerNotificationManager.NotificationListener =
+        object : PlayerNotificationManager.NotificationListener {
+
+            override fun onNotificationPosted(
+                notificationId: Int,
+                notification: Notification,
+                ongoing: Boolean
+            ) {
+                startForeground(notificationId, notification)
+            }
+
+            override fun onNotificationCancelled(
+                notificationId: Int,
+                dismissedByUser: Boolean
+            ) {
+                stopSelf()
+            }
+        }
+
 
     private fun startTimer(duration: Long) {
 
@@ -253,15 +247,10 @@ class MusicPlayerService : LifecycleService() {
         timer = object : CountDownTimer(timerDuration, TIMER_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
                 trackDurationLiveData.value = trackDurationLiveData.value?.plus(TIMER_INTERVAL)
-                updateNotification(
-                    PlaybackStateCompat.STATE_PLAYING,
-                    trackDurationLiveData.value?.toInt() ?: 0
-                )
             }
 
             override fun onFinish() {
                 trackDurationLiveData.value = trackDurationLiveData.value?.plus(TIMER_INTERVAL)
-                updateNotification(PlaybackStateCompat.STATE_PLAYING, 0)
             }
         }.start()
     }
