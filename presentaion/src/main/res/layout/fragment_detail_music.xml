@@ -1,83 +1,147 @@
-<!-- fragment_detail_music.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="model"
-            type="com.nikmaram.data.model.MusicFile" />
-    </data>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true"
+        android:transitionName="track_card_transition">
 
-        <ImageView
-            android:id="@+id/album_art"
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_weight="2"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            app:imageUrl="@{model.imageUri}"
-            android:src="@drawable/placeholder" />
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{model.title}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:padding="@dimen/padding_small" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/artist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{model.artist}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:padding="@dimen/padding_small" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="320dp"
+                    android:layout_height="320dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="64dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="16dp"
+                    app:strokeWidth="0dp">
 
-        <SeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_small" />
+                    <ImageView
+                        android:id="@+id/ivCover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+                </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/prev_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitCenter"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_previous_track" />
+                    <TextView
+                        android:id="@+id/tvTrackName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:ellipsize="marquee"
+                        android:maxLines="1"
+                        android:gravity="center"
+                        android:textSize="@dimen/huge_text_size"
+                        tools:text="Smells Like Teen Spirit" />
 
-            <ImageButton
-                android:id="@+id/play_pause_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:scaleType="fitCenter"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_play" />
+                    <TextView
+                        android:id="@+id/tvPerformer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/medium_text_size"
+                        android:maxLines="1"
+                        android:ellipsize="marquee"
+                        android:gravity="center"
+                        tools:text="Nirvana" />
+                </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/next_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleType="fitCenter"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_next_track" />
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderTime"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0" />
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal">
 
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvCurrentTrackTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:textSize="@dimen/hyper_small_text_size"
+                        android:layout_marginStart="16dp"
+                        tools:text="0:00" />
+
+                    <TextView
+                        android:id="@+id/tvRemainingTrackTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="end"
+                        android:textSize="@dimen/hyper_small_text_size"
+                        tools:text="3:49" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal">
+
+
+                    <ImageButton
+                        android:id="@+id/ibPreviousTrack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@android:color/transparent"
+                        android:src="@drawable/ic_round_skip_previous_48" />
+
+
+                    <ImageButton
+                        android:id="@+id/ibPlayPause"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@android:color/transparent"
+                        android:src="@drawable/ic_baseline_play_circle_filled_64" />
+
+                    <ImageButton
+                        android:id="@+id/ibNextTrack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@android:color/transparent"
+                        android:src="@drawable/ic_round_skip_next_48" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
-
-
