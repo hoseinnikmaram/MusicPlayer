@@ -23,7 +23,7 @@ object MusicUtil {
     private const val selectionId =
         "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media._ID} = ?"
 
-    fun getAllMusicFiles(context: Context): ResultData<MutableList<MusicFile>> {
+    fun getAllMusicFiles(context: Context): MutableList<MusicFile>? {
         val musicFiles = mutableListOf<MusicFile>()
         val cursor = context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -51,16 +51,16 @@ object MusicUtil {
                     musicFiles.add(MusicFile(id, title, artist, album, duration, data))
                 }
             }
-            return ResultData.Success(musicFiles)
+            return musicFiles
         } catch (ex: Exception) {
-            return ResultData.Error(ex)
+            return null
         }
         finally {
             cursor?.close()
         }
     }
 
-     fun getMusicById(id: Long, context: Context): ResultData<MusicFile> {
+     fun getMusicById(id: Long, context: Context): MusicFile? {
         val selectionArgs = arrayOf(id.toString())
         val cursor = context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -84,17 +84,17 @@ object MusicUtil {
                     val duration = cursor.getLong(durationColumn)
                     val album = cursor.getString(albumColumn)
                     val data = cursor.getString(dataColumn)
-                    return ResultData.Success(MusicFile(id, title, artist, album, duration, data))
+                    return MusicFile(id, title, artist, album, duration, data)
                 }
             }
         }
         catch (ex: Exception) {
-            return ResultData.Error(ex)
+            Log.d("error", "getMusicById: $ex")
         }
         finally {
             cursor?.close()
         }
-        return ResultData.Success(null)
+        return null
     }
 }
 
