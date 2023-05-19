@@ -15,17 +15,13 @@ class MusicDetailViewModel @Inject constructor(
     private val getMusicByIdUseCase: GetMusicFileByIdUseCase
 ) : ViewModel() {
 
-    private val _music = MutableLiveData<MusicFile>()
-    val music: LiveData<MusicFile> = _music
+    private val _music = MutableLiveData<MusicFile?>()
+    val music: LiveData<MusicFile?> = _music
 
     fun loadMusicById(musicId: Long) {
         viewModelScope.launch {
-            when (val result = getMusicByIdUseCase(musicId)) {
-                is ResultData.Success -> _music.postValue(result.data as MusicFile?)
-                is ResultData.Error -> {
-                    // handle error result
-                }
-            }
+            val result = getMusicByIdUseCase(musicId)
+            _music.postValue(result)
         }
     }
 }
