@@ -23,18 +23,12 @@ class MusicListViewModel @Inject constructor(
         _musicListState.postValue(MusicListState.Loading)
         val result = getMusicListUseCase()
         _musicListState.postValue(
-            when (result) {
-                is ResultData.Success -> {
-                    MusicListState.Loaded(result.data as List<MusicFile>)
-                }
-                is ResultData.Error -> MusicListState.Error(result.exception.message)
-            }
+            MusicListState.Loaded(result)
         )
     }
 
     sealed class MusicListState {
         object Loading : MusicListState()
-        data class Loaded(val musicList: List<MusicFile>) : MusicListState()
-        data class Error(val message: String?) : MusicListState()
+        data class Loaded(val musicList: List<MusicFile>?) : MusicListState()
     }
 }
