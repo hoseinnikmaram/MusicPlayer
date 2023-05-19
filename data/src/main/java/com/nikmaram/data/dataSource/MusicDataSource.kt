@@ -4,6 +4,6 @@ import com.nikmaram.data.model.MusicFile
 import com.nikmaram.data.utility.ResultData
 
 interface MusicDataSource {
-    suspend fun getMusicFiles(): ResultData<List<MusicFile>>
-    suspend fun getMusicFileById(id: Long): ResultData<MusicFile>
+    suspend fun getMusicFiles(): List<MusicFile>?
+    suspend fun getMusicFileById(id: Long): MusicFile?
 }
