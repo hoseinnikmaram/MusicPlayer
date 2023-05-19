@@ -6,7 +6,7 @@ import com.nikmaram.data.utility.ResultData
 import javax.inject.Inject
 
 class GetMusicFileByIdUseCase @Inject constructor(private val dataSource: MusicDataSource){
-    suspend operator fun invoke(id:Long): ResultData<MusicFile> {
+    suspend operator fun invoke(id:Long): MusicFile? {
         return dataSource.getMusicFileById(id)
     }
 }
