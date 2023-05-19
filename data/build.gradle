@@ -46,4 +46,11 @@ dependencies {
     // hilt
     implementation "com.google.dagger:hilt-android:2.43.2"
     kapt "com.google.dagger:hilt-android-compiler:2.43.2"
+    // room database
+    def roomVersion = "2.5.1"
+    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
 }
