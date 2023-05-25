@@ -1,5 +1,6 @@
 package com.nikmaram.data.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.nikmaram.data.model.MusicFileEntity
 
@@ -18,7 +19,7 @@ interface MusicFileDao {
     suspend fun deleteMusicFile(musicFileEntity: MusicFileEntity)
 
     @Query("SELECT * FROM MusicFileEntity")
-    suspend fun getAllMusicFiles(): List<MusicFileEntity>?
+    fun getAllMusicFilesAsPaging(): PagingSource<Int, MusicFileEntity>
 
     @Query("SELECT COUNT(*) FROM MusicFileEntity")
     suspend fun getMusicFilesCount(): Int
