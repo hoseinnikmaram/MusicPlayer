@@ -1,6 +1,7 @@
 package com.nikmaram.presentaion.MusicsList
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.R
@@ -19,19 +21,20 @@ import com.nikmaram.presentaion.readExternalStoragePermission
 import com.nikmaram.presentaion.service.MusicPlayerService
 import com.nikmaram.presentaion.utility.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MusicListFragment : Fragment() {
     private val viewModel: MusicListViewModel by viewModels()
     private lateinit var binding: FragmentMusicListBinding
-    private lateinit var musicListAdapter:MusicListAdapter
-    private lateinit var requestPermissionResultLauncher:ActivityResultLauncher<String>
-    private var musics = ArrayList<MusicFile>()
+    private lateinit var musicListAdapter: MusicListAdapter
+    private lateinit var requestPermissionResultLauncher: ActivityResultLauncher<String>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if(::binding.isInitialized) return binding.root
+        if (::binding.isInitialized) return binding.root
         binding = FragmentMusicListBinding.inflate(inflater, container, false)
         checkPermission()
         setupRecyclerView()
@@ -40,18 +43,10 @@ class MusicListFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.musicListState.observe(viewLifecycleOwner){musicListState ->
-            when(musicListState){
-                is MusicListViewModel.MusicListState.Loaded -> {
-                    binding.progress.visibility = View.GONE
-                    musicListState.musicList?.let {
-                        musics.addAll(it)
-                        musicListAdapter.submitList(it)
-                    }
-                }
-                MusicListViewModel.MusicListState.Loading -> {
-                    binding.progress.visibility = View.VISIBLE
-                }
+        viewModel.musicPagingData.observe(viewLifecycleOwner){ pagingData ->
+            binding.progress.visibility = View.GONE
+            lifecycleScope.launch {
+                musicListAdapter.submitData(pagingData)
             }
         }
     }
@@ -68,13 +63,13 @@ class MusicListFragment : Fragment() {
         }
     }
     private fun startPlayer(position: Int) {
-        if (musics.size == 0) {
-            Toast.makeText(requireContext(), "Nothing to play", Toast.LENGTH_SHORT).show()
+        if (musicListAdapter.snapshot().items.isEmpty()) {
+            Toast.makeText(requireContext(), getString(R.string.nothing_to_play), Toast.LENGTH_SHORT).show()
             return
         }
         MusicPlayerService.startService(requireContext(), ServiceContentWrapper(
             position = position,
-            playlist = musics,
+            playlist = musicListAdapter.snapshot().items.toMutableList(),
         )
         )
     }
@@ -84,7 +79,7 @@ class MusicListFragment : Fragment() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 // Permission is granted, proceed with getting music files
-                viewModel.loadMusicList()
+                viewModel.getMusicFiles()
             } else {
                 // Permission is denied
                 Toast.makeText(
@@ -105,7 +100,7 @@ class MusicListFragment : Fragment() {
                     readExternalStoragePermission
                 ) -> {
                     // Permission is already granted, proceed with getting music files
-                    viewModel.loadMusicList()
+                    viewModel.getMusicFiles()
                 }
                 shouldShowRequestPermissionRationale(readExternalStoragePermission) -> {
                     // Display a rationale to the user
