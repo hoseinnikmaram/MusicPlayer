@@ -1,9 +1,10 @@
 package com.nikmaram.data.dataSource
 
+import androidx.paging.PagingData
 import com.nikmaram.data.model.MusicFile
-import com.nikmaram.data.utility.ResultData
+import kotlinx.coroutines.flow.Flow
 
 interface MusicDataSource {
-    suspend fun getMusicFiles(): List<MusicFile>?
+    suspend fun getMusicFilesAsPaging(): Flow<PagingData<MusicFile>>
     suspend fun getMusicFileById(id: Long): MusicFile?
 }
