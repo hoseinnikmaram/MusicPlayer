@@ -2,6 +2,7 @@ package com.nikmaram.presentaion.MusicsList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +10,7 @@ import com.nikmaram.data.model.MusicFile
 import com.nikmaram.presentaion.databinding.ListItemMusicBinding
 
 class MusicListAdapter(private val onMusicFileClicked: (Int) -> Unit) :
-    ListAdapter<MusicFile, MusicViewHolder>(MusicFileDiffCallback()) {
+    PagingDataAdapter<MusicFile, MusicViewHolder>(MusicFileDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -19,10 +20,13 @@ class MusicListAdapter(private val onMusicFileClicked: (Int) -> Unit) :
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
         val musicFile = getItem(position)
-        holder.bind(musicFile)
+        if (musicFile != null) holder.bind(musicFile)
         holder.itemView.setOnClickListener { onMusicFileClicked(position) }
     }
 }
+    fun getMusics(){
+
+    }
 
 class MusicViewHolder(private val binding: ListItemMusicBinding) :
     RecyclerView.ViewHolder(binding.root) {
