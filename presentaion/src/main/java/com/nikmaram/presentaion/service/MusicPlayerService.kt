@@ -1,17 +1,13 @@
 package com.nikmaram.presentaion.service
 
-import android.Manifest
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
