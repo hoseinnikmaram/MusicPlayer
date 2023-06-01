@@ -17,9 +17,14 @@ interface MusicFileDao {
 
     @Delete
     suspend fun deleteMusicFile(musicFileEntity: MusicFileEntity)
+    @Delete
+    suspend fun deleteMusicFiles(musicFileEntity: List<MusicFileEntity>)
 
     @Query("SELECT * FROM MusicFileEntity")
     fun getAllMusicFilesAsPaging(): PagingSource<Int, MusicFileEntity>
+
+    @Query("SELECT * FROM MusicFileEntity")
+    suspend fun getAllMusicFiles() : List<MusicFileEntity>
 
     @Query("SELECT COUNT(*) FROM MusicFileEntity")
     suspend fun getMusicFilesCount(): Int
