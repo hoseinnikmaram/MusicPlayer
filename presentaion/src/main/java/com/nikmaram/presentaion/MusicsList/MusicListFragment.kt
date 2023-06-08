@@ -19,10 +19,12 @@ import com.nikmaram.presentaion.databinding.FragmentMusicListBinding
 import com.nikmaram.presentaion.model.ServiceContentWrapper
 import com.nikmaram.presentaion.readExternalStoragePermission
 import com.nikmaram.presentaion.service.MusicPlayerService
+import com.nikmaram.presentaion.utility.MusicContentObserver
 import com.nikmaram.presentaion.utility.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MusicListFragment : Fragment() {
@@ -30,6 +32,8 @@ class MusicListFragment : Fragment() {
     private lateinit var binding: FragmentMusicListBinding
     private lateinit var musicListAdapter: MusicListAdapter
     private lateinit var requestPermissionResultLauncher: ActivityResultLauncher<String>
+    @Inject
+    lateinit var musicContentObserver: MusicContentObserver
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,11 +46,31 @@ class MusicListFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        observeUpdateMusics()
+    }
     private fun observeViewModel() {
         viewModel.musicPagingData.observe(viewLifecycleOwner){ pagingData ->
             binding.progress.visibility = View.GONE
             lifecycleScope.launch {
                 musicListAdapter.submitData(pagingData)
+            }
+        }
+    }
+
+    private fun observeUpdateMusics() {
+        musicContentObserver.deletedMusicFilesLiveData.observe(viewLifecycleOwner){
+                deletedMusicIds ->
+            lifecycleScope.launch {
+                musicListAdapter.deleteMusicItems(deletedMusicIds)
+            }
+        }
+
+        musicContentObserver.addedMusicFilesLiveData.observe(viewLifecycleOwner){
+                addedMusics->
+            lifecycleScope.launch {
+                musicListAdapter.addMusicFiles(addedMusics)
             }
         }
     }
