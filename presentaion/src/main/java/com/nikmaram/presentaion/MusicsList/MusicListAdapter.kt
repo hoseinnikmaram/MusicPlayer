@@ -2,6 +2,7 @@ package com.nikmaram.presentaion.MusicsList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -23,10 +24,22 @@ class MusicListAdapter(private val onMusicFileClicked: (Int) -> Unit) :
         if (musicFile != null) holder.bind(musicFile)
         holder.itemView.setOnClickListener { onMusicFileClicked(position) }
     }
-}
-    fun getMusics(){
-
+    suspend fun deleteMusicItems(deletedMusicIds: List<Long>) {
+        val allMusicFile = snapshot().items.toMutableList()
+        val deletedMusicList = allMusicFile.filter { deletedMusicIds.contains(it.id) }
+        allMusicFile.removeAll(deletedMusicList)
+        val updatedData = PagingData.from(allMusicFile)
+        submitData(updatedData)
     }
+
+    suspend fun addMusicFiles(musicFiles: List<MusicFile>) {
+        val currentList = snapshot().items.toMutableList()
+        currentList.addAll(musicFiles)
+        val updatedData = PagingData.from(currentList)
+        submitData(updatedData)
+    }
+}
+
 
 class MusicViewHolder(private val binding: ListItemMusicBinding) :
     RecyclerView.ViewHolder(binding.root) {

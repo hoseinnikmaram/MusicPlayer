@@ -33,3 +33,11 @@ fun List<MusicFileEntity>.toMusicFileList(): List<MusicFile> {
     }
     return returnableList
 }
+
+fun List<MusicFile>.toMusicFileEntityList() : List<MusicFileEntity> {
+    val returnableList = mutableListOf<MusicFileEntity>()
+    for (n in this.indices){
+        returnableList.add(this[n].toMusicFileEntity())
+    }
+    return returnableList
+}
