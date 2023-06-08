@@ -13,6 +13,11 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         registerMusicContentObserver()
+        checkUpdateMusicFiles()
+    }
+
+    private fun checkUpdateMusicFiles() {
+        musicContentObserver.checkUpdateMusicFiles()
     }
 
     private fun registerMusicContentObserver() {
